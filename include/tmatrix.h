@@ -76,14 +76,10 @@ public:
   // индексация
   T& operator[](size_t ind)
   {
-      if (ind >= sz)
-          throw out_of_range("Index out of range");
       return pMem[ind];
   }
   const T& operator[](size_t ind) const
   {
-      if (ind >= sz)
-          throw out_of_range("Index out of range");
       return pMem[ind];
   }
   // индексация с контролем
@@ -197,6 +193,8 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
   using TDynamicVector<TDynamicVector<T>>::pMem;
   using TDynamicVector<TDynamicVector<T>>::sz;
 public:
+  using TDynamicVector<TDynamicVector<T>>::at;
+  using TDynamicVector<TDynamicVector<T>>::size;
   TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
   {
       if (s > MAX_MATRIX_SIZE)
@@ -277,19 +275,6 @@ public:
               ostr << endl;
       }
       return ostr;
-  }
-
-  size_t size() const noexcept { return sz; }
-
-  TDynamicVector<T>& at(size_t ind) {
-      if (ind >= sz)
-          throw out_of_range("Matrix row index out of range");
-      return pMem[ind];
-  }
-  const TDynamicVector<T>& at(size_t ind) const {
-      if (ind >= sz)
-          throw out_of_range("Matrix row index out of range");
-      return pMem[ind];
   }
 };
 
