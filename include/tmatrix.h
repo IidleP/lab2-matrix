@@ -193,6 +193,7 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
   using TDynamicVector<TDynamicVector<T>>::pMem;
   using TDynamicVector<TDynamicVector<T>>::sz;
 public:
+    TDynamicMatrix(const TDynamicVector<TDynamicVector<T>>& v) : TDynamicVector<TDynamicVector<T>>(v) {}; // Привидение типа
   using TDynamicVector<TDynamicVector<T>>::at;
   using TDynamicVector<TDynamicVector<T>>::size;
   TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
@@ -202,7 +203,6 @@ public:
     for (size_t i = 0; i < sz; i++)
       pMem[i] = TDynamicVector<T>(sz);
   }
-
   using TDynamicVector<TDynamicVector<T>>::operator[];
 
   // сравнение
@@ -233,21 +233,32 @@ public:
       return tmp;
   }
 
-  // матрично-матричные операции
+// матрично-матричные операции
   TDynamicMatrix operator+(const TDynamicMatrix& m)
   {
-      TDynamicMatrix tmp(sz);
-      for (size_t i = 0; i < sz; i++)
-          tmp.pMem[i] = pMem[i] + m.pMem[i];
-      return tmp;
+      if (sz != m.sz) {
+          throw invalid_argument("Matrix sizes don't equals");
+      }
+      return TDynamicVector<TDynamicVector<T>>::operator+(m);
   }
   TDynamicMatrix operator-(const TDynamicMatrix& m)
   {
-      TDynamicMatrix tmp(sz);
-      for (size_t i = 0; i < sz; i++)
-          tmp.pMem[i] = pMem[i] - m.pMem[i];
-      return tmp;
+      if (sz != m.sz) {
+          throw invalid_argument("Matrix sizes don't equals");;
+      }
+      return TDynamicVector<TDynamicVector<T>>::operator-(m);
   }
+
+  //using TDynamicVector<TDynamicVector<T>>::operator+; // не работает
+  //using TDynamicVector<TDynamicVector<T>>::operator-; // Не работает
+
+  //TDynamicMatrix operator-(const TDynamicMatrix& m)
+  //{
+  //    TDynamicMatrix tmp(sz);
+  //    for (size_t i = 0; i < sz; i++)
+  //        tmp.pMem[i] = pMem[i] - m.pMem[i];
+  //    return tmp;
+  //}
   TDynamicMatrix operator*(const TDynamicMatrix& m)
   {
       TDynamicMatrix tmp(sz);
